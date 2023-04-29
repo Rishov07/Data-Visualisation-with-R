@@ -1,0 +1,169 @@
+---
+title: "**ESTIMATES AND IMPACTS OF MALNUTRITION**"
+output:
+  html_document:
+    css: "Style.css"                        
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(tidyverse)
+library(readr)
+library(maps)
+library(ggmap)
+library(rmarkdown)
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(dplyr)
+library(tmap)
+library(tmaptools)
+library(leaflet)
+library(plotly)
+library(htmlwidgets)
+library(knitr)
+```
+```{r, echo=FALSE}
+info_data <- data.frame(
+  Name = "**RISHOV GHOSH**",
+  Roll_Number = "**22267770**",
+  Assignment = "**DATA VISUALISATION WITH R (UNICEF DATA)**",
+  Date_of_Submission = "**30.4.2023**",
+  Module_Code = "**MT5000**"
+)
+
+kable(info_data, col.names = c("Name", "Roll Number", "Assignment", "Date of Submission", "Module Code"))
+```
+```{r echo=FALSE, out.width="100%"}
+knitr::include_graphics("Yemeni.jpg", error = FALSE)
+```
+```{r read-data, echo=FALSE}
+library(readr)
+UNICEF_Indicator_2 <- read_csv("UNICEF_Indicator_2.csv", guess_max = 10000, show_col_types = FALSE)
+UNICEF_Metadata <- read_csv("UNICEF_Metadata.csv", guess_max = 10000, show_col_types = FALSE)
+UNICEF_Under_5_mortality_rate <- read_csv("UNICEF_Under_5_mortality_rate.csv", guess_max = 10000, show_col_types = FALSE)
+```
+
+
+## **INTRODUCTION**
+
+Malnutrition is a significant worldwide health issue, impacting a vast number of individuals, particularly those who are young children aged five and below. Malnutrition has been found to have adverse effects not only on physical growth and cognitive development but also on the likelihood of illness, disability, life expectancy and mortality. Comprehending the patterns and trends of malnutrition and its relationship with mortality, and life expectancy rates across diverse regions is imperative for formulating efficacious interventions and policies to address this pressing concern.
+
+This study presents a thorough examination of the correlation between malnutrition, mortality rates, and life expectancy utilizing data sourced from UNICEF. Our objective is to utilize diverse data visualization methods to emphasize the relationship between malnutrition and other said indicators among distinct continents and nations. A range of visual representations, such as a global map, bar graph, scatterplot with a regression line, and time-series chart, will be utilized to enhance comprehension of the worldwide malnutrition terrain and its ramifications.
+
+```{r echo=FALSE, out.width="30%"}
+knitr::include_graphics("UNICEF.jpeg", error = FALSE)
+knitr::include_graphics("Malnutrition_1.png", error = FALSE)
+```
+```{r echo=FALSE, out.width="30%"}
+knitr::include_graphics("Malnutrition.png", error = FALSE)
+```
+
+## **GLOBAL MAP**
+
+The geographical map visually represents an overview of the regions with malnutrition, with dark red being the most and white being the least affected regions by malnutrition. It can be seen that malnutrition under the age of 5 is the most prevalent in Africa and distributed in linear proportion across Eastern Europe, Asia and South America.
+
+```{r worldmap, echo=FALSE, fig.align='center'}
+indicator_2_agg <- UNICEF_Indicator_2 %>%
+  group_by(Country, Continent) %>%
+  summarize(Mean_Malnutrition_Indicator = mean(`Malnutrition Indicator value`, na.rm = TRUE), .groups = 'drop')
+
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+world_map_data_with_malnutrition <- world %>%
+  left_join(indicator_2_agg, by = c("name_long" = "Country", "continent" = "Continent"))
+
+ggplot(data = world_map_data_with_malnutrition) +
+  geom_sf(aes(fill = Mean_Malnutrition_Indicator)) +
+  scale_fill_gradient(low = "white", high = "darkred", na.value = "gray90", name = "Mean Malnutrition\nIndicator Value") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        legend.key.height = unit(1, "cm"),
+        legend.direction = "horizontal",
+        plot.margin = margin(0, 0, 0, 0, "cm")) +
+  labs(title = "World Map with Malnutrition Indicator") +
+  coord_sf(xlim = c(-180, 180), ylim = c(-60, 85), expand = FALSE)
+```
+
+## **BAR CHART - MORTALITY RATE BY SEX/GENDER**
+
+The bar chart shows the mean mortality rate per 1000 individuals by sex and region. It can be seen that malnutrition under the age of 5 is the most prevalent in Africa and distributed in linear proportion across the rest of the continents.
+
+```{r bar chart, echo=FALSE, fig.align='center'}
+merged_data <- UNICEF_Indicator_2 %>%
+  select(Country, Continent) %>%
+  inner_join(UNICEF_Under_5_mortality_rate, by = "Country", relationship = "many-to-many")
+
+continent_order <- merged_data %>%
+  group_by(Continent) %>%
+  summarize(mean_mortality = mean(`Mortality Indicator Value`, na.rm = TRUE), .groups = 'drop') %>%
+  arrange(desc(mean_mortality)) %>%
+  mutate(Continent = factor(Continent, levels = Continent))
+
+merged_data$Continent <- factor(merged_data$Continent, levels = continent_order$Continent)
+
+ggplot(merged_data, aes(x = Continent, y = `Mortality Indicator Value`, fill = Sex)) +
+  geom_bar(stat = "summary", fun = "mean", position = "dodge") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        legend.direction = "horizontal",
+        plot.margin = margin(0, 0, 0, 0, "cm")) +
+  labs(title = "Mean Mortality Rate by Sex/Region",
+       x = "Continent",
+       y = "Mean Mortality Indicator Value") +
+  scale_fill_manual(values = c("navyblue", "darkred", "gold"), name = "Sex")
+```
+
+## **SCATTERPLOT WITH REGRESSION LINE**
+
+The scatterplot indicates the continental distribution of life expectancy at birth with malnutrition. It shows that life expectancy is the lowest in Africa and highest in Europe. This implies that malnutrition levels are inversely proportional to the life expectancy of the regions. Since Africa shows the highest malnutrition levels overall, life expectancy is the lowest.
+
+```{r scatterplot with regression line, echo=FALSE, fig.align='center'}
+merged_data_2 <- UNICEF_Indicator_2 %>%
+  select(Country, Continent) %>%
+  inner_join(UNICEF_Metadata, by = "Country", relationship = "many-to-many") %>%
+  drop_na(`Life expectancy at birth, total (years)`)
+
+ggplot(merged_data_2, aes(x = year, y = `Life expectancy at birth, total (years)`)) +
+  geom_point(aes(color = Continent), alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE, color = "black", formula = y ~ x) +
+  theme_minimal() +
+  labs(title = "Life Expectancy at Birth by Year and Continent",
+       x = "Year",
+       y = "Life Expectancy at Birth (Years)") +
+  scale_color_manual(values = c("navyblue", "darkred", "darkgreen", "darkorange", "purple", "gold"), name = "Continent") +
+  theme(legend.position = "bottom")
+```
+
+## **TIME-SERIES OF MORTALITY RATE**
+
+The time series shows the trend of mortality rate since 2000. It shows a downward trend, indicating that over the 20-year period, the mortality rate is coming down, suggesting that malnutrition levels are coming down with time.
+
+```{r Time Series, echo=FALSE, fig.align='center'}
+merged_data_3 <- UNICEF_Indicator_2 %>%
+  select(Country, Continent) %>%
+  inner_join(UNICEF_Under_5_mortality_rate, by = "Country", relationship = "many-to-many")
+
+mean_mortality_by_continent <- merged_data_3 %>%
+  group_by(`Time Period`, Continent) %>%
+  summarize(mean_mortality = mean(`Mortality Indicator Value`, na.rm = TRUE), .groups = 'drop')
+
+ggplot(mean_mortality_by_continent, aes(x = `Time Period`, y = mean_mortality, color = Continent, group = Continent)) +
+  geom_line(linewidth = 1.2) +
+  theme_minimal() +
+  labs(title = "Time-series Chart of Mean Mortality Rate by Continent",
+       x = "Time Period",
+       y = "Mean Mortality Indicator Value") +
+  scale_color_manual(values = c("navyblue", "darkred", "darkgreen", "darkorange", "purple", "gold"), name = "Continent") +
+  theme(legend.position = "bottom")
+```
+
+## **CONCLUSION**
+
+The research sheds light on the relationship between malnutrition, mortality rates, and life expectancy in various parts of the world. Malnutrition is most frequent in the African continent, according to multiple data visualization methodologies, with other continents displaying varying levels of prevalence. These findings highlight the importance of continuing to invest in interventions and policies aimed at alleviating malnutrition, particularly in high-risk areas. We can improve the quality of life, reduce mortality rates, and improve life expectancy for millions of people worldwide by treating malnutrition. This study also emphasizes the importance of continued monitoring and research to better understand the complexity of malnutrition and its effects on health outcomes, allowing for more targeted and successful initiatives to remove this global scourge.
+
+
+```{r echo=FALSE, out.width="15%"}
+knitr::include_graphics("DCU.png", error = FALSE)
+knitr::include_graphics("UNICEF_Symbol.png", error = FALSE)
+```

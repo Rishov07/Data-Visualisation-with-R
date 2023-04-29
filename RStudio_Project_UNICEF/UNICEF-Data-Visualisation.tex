@@ -1,0 +1,171 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={IMPACTS OF MALNUTRITION},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{IMPACTS OF MALNUTRITION}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1354}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1250}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.4167}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1979}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1250}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+Name
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Roll Number
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Assignment
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Date of Submission
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Module Code
+\end{minipage} \\
+\midrule()
+\endhead
+Rishov Ghosh & 22267770 & Data Visualisation with R (UNICEF DATA) &
+30.4.2023 & MT5000 \\
+\bottomrule()
+\end{longtable}
+
+\includegraphics[width=0.25\linewidth]{UNICEF_Symbol}
+\includegraphics[width=0.25\linewidth]{DCU}
+
+\textbf{Introduction}
+
+Malnutrition is a significant worldwide health issue, impacting a vast
+number of individuals, particularly those who are young children aged
+five and below. Malnutrition has been found to have adverse effects not
+only on physical growth and cognitive development but also on the
+likelihood of illness, disability, life expectancy and mortality.
+Comprehending the patterns and trends of malnutrition and its
+relationship with mortality, and life expectancy rates across diverse
+regions is imperative for formulating efficacious interventions and
+policies to address this pressing concern.
+
+This study presents a thorough examination of the correlation between
+malnutrition, mortality rates, and life expectancy utilizing data
+sourced from UNICEF. Our objective is to utilize diverse data
+visualization methods to emphasize the relationship between malnutrition
+and other said indicators among distinct continents and nations. A range
+of visual representations, such as a global map, bar graph, scatterplot
+with a regression line, and time-series chart, will be utilized to
+enhance comprehension of the worldwide malnutrition terrain and its
+ramifications.
+
+\textbf{World Map of Malnutrition}
+
+The geographical map visually represents an overview of the regions with
+malnutrition, with dark red being the most and white being the least
+affected regions by malnutrition. It can be seen that malnutrition under
+the age of 5 is the most prevalent in Africa and distributed in linear
+proportion across Eastern Europe, Asia and South America.
+
+\includegraphics{UNICEF-Data-Visualisation_files/figure-latex/worldmap-1.pdf}
+
+\textbf{Bar Chart of Mortality Rate by Sex/Region}
+
+The bar chart shows the mean mortality rate per 1000 individuals by sex
+and region. It can be seen that malnutrition under the age of 5 is the
+most prevalent in Africa and distributed in linear proportion across the
+rest of the continents.
+
+\includegraphics{UNICEF-Data-Visualisation_files/figure-latex/bar chart-1.pdf}
+
+\textbf{Scatterplot of Life Expectancy at Birth}
+
+The scatterplot indicates the continental distribution of life
+expectancy at birth with malnutrition. It shows that life expectancy is
+the lowest in Africa and highest in Europe. This implies that
+malnutrition levels are inversely proportional to the life expectancy of
+the regions. Since Africa shows the highest malnutrition levels overall,
+life expectancy is the lowest.
+
+\includegraphics{UNICEF-Data-Visualisation_files/figure-latex/scatterplot with regression line-1.pdf}
+
+\textbf{Time Series of Mortality Rate}
+
+The time series shows the trend of mortality rate since 2000. It shows a
+downward trend, indicating that over the 20-year period, the mortality
+rate is coming down, suggesting that malnutrition levels are coming down
+with time.
+
+\includegraphics{UNICEF-Data-Visualisation_files/figure-latex/Time Series-1.pdf}
+
+\end{document}
